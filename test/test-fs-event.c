@@ -194,13 +194,17 @@ static void fs_event_cb_dir_multi_file(uv_fs_event_t* handle,
   fs_event_cb_called++;
   ASSERT_PTR_EQ(handle, &fs_event);
   ASSERT_OK(status);
-  ASSERT(events == UV_CHANGE || events == UV_RENAME);
-  #if defined(__APPLE__) || defined(_WIN32) || defined(__linux__)
+  ASSERT(events == UV_CREATED || events == UV_RENAME
+#if defined(__APPLE__) || defined(__linux__)
+         || events == UV_DELETED || events == UV_CHANGE
+#endif
+  );
+#if defined(__APPLE__) || defined(_WIN32) || defined(__linux__)
   ASSERT_OK(strncmp(filename, file_prefix, sizeof(file_prefix) - 1));
-  #else
+#else
   ASSERT_NE(filename == NULL ||
             strncmp(filename, file_prefix, sizeof(file_prefix) - 1) == 0, 0);
-  #endif
+#endif
 
   if (fs_event_created + fs_event_removed == fs_event_file_count) {
     /* Once we've processed all create events, delete all files */
