@@ -1689,18 +1689,21 @@ UV_EXTERN int uv_fs_statfs(uv_loop_t* loop,
                            const char* path,
                            uv_fs_cb cb);
 
-
-enum uv_fs_event {
+enum uv_fs_event
+{
   UV_RENAME = 1,
   UV_CHANGE = 2
-#if defined(__linux__)
+#if defined(__APPLE__) || defined(__linux__)
   ,
   UV_CREATED = 3,
   UV_DELETED = 4
-#endif
-  
-};
 
+  #if(MAC_OS_X_VERSION_MAX_ALLOWED>1070)
+  ,
+  UV_AIRDROP = 5
+  #endif
+#endif
+};
 
 struct uv_fs_event_s {
   UV_HANDLE_FIELDS
