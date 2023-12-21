@@ -1693,6 +1693,12 @@ UV_EXTERN int uv_fs_statfs(uv_loop_t* loop,
 enum uv_fs_event {
   UV_RENAME = 1,
   UV_CHANGE = 2
+#if defined(__linux__)
+  ,
+  UV_CREATED = 3,
+  UV_DELETED = 4
+#endif
+  
 };
 
 
