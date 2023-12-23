@@ -531,15 +531,18 @@ void uv__process_fs_event_req(uv_loop_t* loop, uv_req_t* req,
 
           /* Convert the filename to utf8. */
           uv__convert_utf16_to_utf8(filenamew, sizew, &filename);
-
           switch (file_info->Action) {
             case FILE_ACTION_ADDED:
+              handle->cb(handle, filename, UV_CREATE, 0);
+              break;
             case FILE_ACTION_REMOVED:
+              handle->cb(handle, filename, UV_DELETE, 0);
+              break;
             case FILE_ACTION_RENAMED_OLD_NAME:
+              break;
             case FILE_ACTION_RENAMED_NEW_NAME:
               handle->cb(handle, filename, UV_RENAME, 0);
               break;
-
             case FILE_ACTION_MODIFIED:
               handle->cb(handle, filename, UV_CHANGE, 0);
               break;
@@ -554,9 +557,10 @@ void uv__process_fs_event_req(uv_loop_t* loop, uv_req_t* req,
 
         offset = file_info->NextEntryOffset;
       } while (offset && !(handle->flags & UV_HANDLE_CLOSING));
-    } else {
-      handle->cb(handle, NULL, UV_CHANGE, 0);
     }
+    // } else {
+    //   handle->cb(handle, NULL, UV_CHANGE, 0);
+    // }
   } else {
     err = GET_REQ_ERROR(req);
     handle->cb(handle, NULL, 0, uv_translate_sys_error(err));

@@ -329,11 +329,11 @@ static void uv__fsevents_event_cb(const FSEventStreamRef streamRef,
 #if defined(__APPLE__) && (MAC_OS_X_VERSION_MAX_ALLOWED > 1070) 
       if (flags & kFSEventsCreated)
       {
-        event->events = UV_CREATED;
+        event->events = UV_CREATE;
       }
       if (flags & kFSEventsRemoved)
       {
-        event->events = UV_DELETED;
+        event->events = UV_DELETE;
       }
       if (flags & kFSEventsModified) // Can describe the changes in the attributes of the file
       {

@@ -1693,16 +1693,11 @@ enum uv_fs_event
 {
   UV_RENAME = 1,
   UV_CHANGE = 2
-#if defined(__APPLE__) || defined(__linux__)
+  #if ! defined(__unix__)
   ,
-  UV_CREATED = 3,
-  UV_DELETED = 4
-
-  #if(MAC_OS_X_VERSION_MAX_ALLOWED>1070)
-  ,
-  UV_AIRDROP = 5
+  UV_CREATE = 3,
+  UV_DELETE = 4
   #endif
-#endif
 };
 
 struct uv_fs_event_s {

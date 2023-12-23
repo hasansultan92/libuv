@@ -194,9 +194,9 @@ static void fs_event_cb_dir_multi_file(uv_fs_event_t* handle,
   fs_event_cb_called++;
   ASSERT_PTR_EQ(handle, &fs_event);
   ASSERT_OK(status);
-  ASSERT(events == UV_CREATED || events == UV_RENAME
-#if defined(__APPLE__) || defined(__linux__)
-         || events == UV_DELETED || events == UV_CHANGE
+  ASSERT(events == UV_CHANGE || events == UV_RENAME
+#if ! defined(__unix__)
+         || events == UV_DELETE || events == UV_CREATE
 #endif
   );
 #if defined(__APPLE__) || defined(_WIN32) || defined(__linux__)
@@ -291,7 +291,11 @@ static void fs_event_cb_dir_multi_file_in_subdir(uv_fs_event_t* handle,
   fs_multievent_cb_called++;
   ASSERT_PTR_EQ(handle, &fs_event);
   ASSERT_OK(status);
-  ASSERT(events == UV_CHANGE || events == UV_RENAME);
+  ASSERT(events == UV_CHANGE || events == UV_RENAME 
+  #if !defined(__unix__)
+  || events == UV_CREATE || events == UV_DELETE
+  #endif
+  );
   #if defined(__APPLE__) || defined(_WIN32) || defined(__linux__)
   ASSERT_OK(strncmp(filename,
                     file_prefix_in_subdir,

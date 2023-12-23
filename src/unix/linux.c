@@ -2444,9 +2444,9 @@ static void uv__inotify_read(uv_loop_t* loop,
       if (e->mask & IN_MOVE)
         events |= UV_RENAME;
       if (e->mask & IN_CREATE)
-        events |= UV_CREATED;
+        events |= UV_CREATE;
       if (e->mask & IN_DELETE)
-        events |= UV_DELETED;
+        events |= UV_DELETE;
 
       w = find_watcher(loop, e->wd);
       if (w == NULL)
